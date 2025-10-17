@@ -1,0 +1,147 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-padrao">
+  <div class="card p-5 shadow-lg rounded-4 login-card" style="width: 100%; max-width: 480px">
+    <div class="text-center mb-4">
+      <div class="container mx-auto mb-3">
+        <img src="pokeball.png" alt="Pokeball" class="pokeball-image" />
+      </div>
+      <h2 class="mb-2 text-primary fw-bold">Junte-se à Pokédex!</h2>
+      <p class="text-muted mb-0">
+        Crie sua conta para se <span class="text-primary">tornar um mestre pokémon!</span>
+      </p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="nome" class="form-label fw-semibold text-dark">Nome Completo</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="User" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="text"
+            id="nome"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="nome"
+            name="nome"
+            placeholder="Digite seu nome completo"
+            required
+            [class.is-invalid]="getFieldError('nome')"
+          />
+        </div>
+        <div *ngIf="getFieldError('nome')" class="invalid-feedback d-block">
+          {{ getFieldError('nome')![0] }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="login" class="form-label fw-semibold text-dark">Login</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="User" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="text"
+            id="login"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="login"
+            name="login"
+            placeholder="Escolha seu login"
+            required
+            [class.is-invalid]="getFieldError('login')"
+          />
+        </div>
+        <div *ngIf="getFieldError('login')" class="invalid-feedback d-block">
+          {{ getFieldError('login')![0] }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold text-dark">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="Mail" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="email"
+            id="email"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Digite seu email"
+            required
+            [class.is-invalid]="getFieldError('email')"
+          />
+        </div>
+        <div *ngIf="getFieldError('email')" class="invalid-feedback d-block">
+          {{ getFieldError('email')![0] }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold text-dark">Senha</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="Lock" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="password"
+            id="password"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Crie sua senha"
+            required
+            [class.is-invalid]="getFieldError('password')"
+          />
+        </div>
+        <div *ngIf="getFieldError('password')" class="invalid-feedback d-block">
+          {{ getFieldError('password')![0] }}
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="password2" class="form-label fw-semibold text-dark">Confirmar Senha</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="Lock" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="password"
+            id="password2"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="password2"
+            name="password2"
+            placeholder="Confirme sua senha"
+            required
+            [class.is-invalid]="getFieldError('password2')"
+          />
+        </div>
+        <div *ngIf="getFieldError('password2')" class="invalid-feedback d-block">
+          {{ getFieldError('password2')![0] }}
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+        <lucide-icon [img]="AlertCircle" [size]="16" class="me-2"></lucide-icon>
+        {{ error }}
+      </div>
+
+      <div class="d-grid mb-3">
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg py-2 fw-semibold"
+          [disabled]="isLoading"
+        >
+          {{ isLoading ? 'Cadastrando...' : 'Cadastrar' }}
+        </button>
+      </div>
+
+      <div class="text-center mt-3">
+        <span>
+          Já tem conta?
+          <a [routerLink]="['/']" class="text-primary cursor-pointer"> Fazer login </a>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>

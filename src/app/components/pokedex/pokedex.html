@@ -1,0 +1,96 @@
+<div class="container my-4">
+  <div class="bg-padrao text-white p-4">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <img src="pokeball.png" alt="Pokeball" class="pokeball-image" />
+        <h1 class="fw-bold" style="font-size: 1.8rem">Pokédex Digital</h1>
+        <p>
+          Explore o mundo dos Pokémon com nossa Pokédex interativa. Descubra Informações detalhadas
+          sobre cada monstrinho.
+        </p>
+      </div>
+      <button class="btn btn-primary" (click)="irParaFavoritos()">
+        <lucide-icon [img]="Sparkles" [size]="16" class="me-2"></lucide-icon> Favoritos
+      </button>
+      <button class="btn btn-primary" (click)="irParaGrupo()">
+        <lucide-icon [img]="Swords" [size]="16" class="me-2"></lucide-icon>Meu Grupo de batalha
+      </button>
+    </div>
+  </div>
+
+  <div class="p-3 text-black" style="border-radius: 0 0 8px 8px">
+    <div class="d-flex gap-4">
+      <div>
+        <strong>{{ totalCount }}</strong> Pokémons
+      </div>
+      <div><strong>18</strong> Tipos</div>
+      <div><strong>9</strong> Gerações</div>
+    </div>
+
+    <div class="mt-4 mb-4"><h4>Pokemons Descobertos</h4></div>
+
+    <div
+      class="d-flex flex-wrap gap-2 mt-3"
+      style="border-bottom: 2px solid; padding-bottom: 12px; margin-bottom: 12px"
+    >
+      <button class="btn btn-sm text-white btn-primary" (click)="carregarPokemons()">
+        Todos os Tipos
+      </button>
+      <button class="btn btn-sm btn-outline-danger" (click)="buscarPorTipo('fire')">Fogo</button>
+      <button class="btn btn-sm btn-outline-primary" (click)="buscarPorTipo('water')">Água</button>
+      <button class="btn btn-sm btn-outline-success" (click)="buscarPorTipo('grass')">Grama</button>
+      <button class="btn btn-sm btn-outline-warning" (click)="buscarPorTipo('electric')">
+        Elétrico
+      </button>
+    </div>
+
+    <div class="row g-2">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar por nome..."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="buscarPorNome()"
+        />
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" [(ngModel)]="selectedGen" (change)="filtrarPorGeracao()">
+          <option value="">Todas as gerações</option>
+          <option *ngFor="let g of [1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="g">Geração {{ g }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Carregando pokémons...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+
+  <div class="row mt-4">
+    <div *ngFor="let p of pokemons" class="col-12 col-sm-6 col-lg-4 mb-4">
+      <app-pokemon-card [pokemon]="p" [showStats]="true"> </app-pokemon-card>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center mt-3 gap-3">
+    <button
+      class="btn btn-outline-primary"
+      (click)="mudarPagina(-1)"
+      [disabled]="currentPage === 1"
+    >
+      ‹ Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalCount / limit | number : '1.0-0' }}</span>
+    <button
+      class="btn btn-outline-primary"
+      (click)="mudarPagina(1)"
+      [disabled]="currentPage * limit >= totalCount"
+    >
+      Próxima ›
+    </button>
+  </div>
+</div>

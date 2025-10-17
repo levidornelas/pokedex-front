@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-padrao">
+  <div class="card p-5 shadow-lg rounded-4 login-card" style="width: 100%; max-width: 420px">
+    <div class="text-center mb-4">
+      <div class="container mx-auto mb-3">
+        <img src="pokeball.png" alt="Pokeball" class="pokeball-image" />
+      </div>
+      <h2 class="mb-2 text-primary fw-bold">Bem-vindo à Pokédex!</h2>
+      <p class="text-muted mb-0">
+        Faça login para se <span class="text-primary">tornar um mestre pokémon!</span>
+      </p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label for="login" class="form-label fw-semibold text-dark">Login</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="User" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="text"
+            id="login"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="login"
+            name="login"
+            placeholder="Digite seu login"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label fw-semibold text-dark">Senha</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <lucide-icon [img]="Lock" [size]="18" class="text-muted"></lucide-icon>
+          </span>
+          <input
+            type="password"
+            id="password"
+            class="form-control border-start-0 ps-0"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Digite sua senha"
+            required
+          />
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <lucide-icon [img]="AlertCircle" [size]="16" class="me-2"></lucide-icon>
+        {{ error }}
+      </div>
+
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-primary btn-lg py-2 fw-semibold">Entrar</button>
+      </div>
+      <div class="text-center mt-3">
+        <span>
+          Ainda não tem conta?
+          <a [routerLink]="['/cadastro']" class="text-primary cursor-pointer"> Fazer cadastro </a>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
