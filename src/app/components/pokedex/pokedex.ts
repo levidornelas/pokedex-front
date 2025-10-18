@@ -18,15 +18,37 @@ export class Pokedex implements OnInit {
   pokemons: Pokemon[] = [];
   loading = false;
   error: string | null = null;
-  searchTerm = '';
+  search = '';
   selectedGen: string = '';
   currentPage = 1;
   limit = 20;
   totalCount = 0;
   currentTypeFilter: string | null = null;
+  activeFilter: string | null = null;
 
   readonly Sparkles = Sparkles;
   readonly Swords = Swords;
+
+  tiposPokemon: any = [
+    'normal',
+    'fire',
+    'water',
+    'electric',
+    'grass',
+    'ice',
+    'fighting',
+    'poison',
+    'ground',
+    'flying',
+    'psychic',
+    'bug',
+    'rock',
+    'ghost',
+    'dragon',
+    'dark',
+    'steel',
+    'fairy',
+  ];
 
   constructor(
     private pokemonService: PokemonService,
@@ -34,16 +56,16 @@ export class Pokedex implements OnInit {
     private router: Router
   ) {}
 
+  ngOnInit(): void {
+    this.carregarPokemons();
+  }
+
   irParaFavoritos() {
     this.router.navigate(['/favoritos']);
   }
 
   irParaGrupo() {
     this.router.navigate(['/grupo-batalha']);
-  }
-
-  ngOnInit(): void {
-    this.carregarPokemons();
   }
 
   carregarPokemons(): void {
@@ -66,6 +88,8 @@ export class Pokedex implements OnInit {
       return;
     }
 
+    this.activeFilter = null;
+
     this.pokemonService.listarPokemons(this.limit, (this.currentPage - 1) * this.limit).subscribe({
       next: (response) => {
         this.pokemons = response.results;
@@ -84,11 +108,10 @@ export class Pokedex implements OnInit {
       this.carregarPokemons();
       return;
     }
-
     this.currentTypeFilter = null;
-    this.searchTerm = '';
+    this.activeFilter = null;
+    this.search = '';
     this.loading = true;
-
     this.pokemonService.buscarPorGeracao(parseInt(this.selectedGen)).subscribe({
       next: (res) => {
         this.pokemons = res.pokemons;
@@ -102,16 +125,15 @@ export class Pokedex implements OnInit {
   }
 
   buscarPorNome(): void {
-    if (!this.searchTerm.trim()) {
+    if (!this.search.trim()) {
       this.carregarPokemons();
       return;
     }
-
     this.currentTypeFilter = null;
+    this.activeFilter = null;
     this.selectedGen = '';
     this.loading = true;
-
-    this.pokemonService.obterDetalhesPokemon(this.searchTerm).subscribe({
+    this.pokemonService.obterDetalhesPokemon(this.search).subscribe({
       next: (res) => {
         this.pokemons = [res];
         this.loading = false;
@@ -124,7 +146,7 @@ export class Pokedex implements OnInit {
   }
 
   mudarPagina(delta: number): void {
-    if (this.currentTypeFilter || this.searchTerm) return;
+    if (this.currentTypeFilter || this.search) return;
 
     const novaPagina = this.currentPage + delta;
     if (novaPagina < 1) return;
@@ -135,11 +157,46 @@ export class Pokedex implements OnInit {
   }
 
   buscarPorTipo(tipo: string): void {
-    this.searchTerm = '';
+    this.search = '';
     this.selectedGen = '';
     this.currentPage = 1;
     const tipoEmIngles = this.typeMapper.traduzirParaEn(tipo);
     this.currentTypeFilter = tipoEmIngles === 'todos' || !tipo ? null : tipoEmIngles;
+    this.activeFilter = tipo;
     this.carregarPokemons();
+  }
+
+  limparFiltros(): void {
+    this.currentTypeFilter = null;
+    this.activeFilter = null;
+    this.search = '';
+    this.selectedGen = '';
+    this.currentPage = 1;
+    this.carregarPokemons();
+  }
+
+  // Retorna cor base para botões outline
+  obterCorBasica(tipo: string): string {
+    const cores: any = {
+      fire: 'danger',
+      water: 'primary',
+      grass: 'success',
+      electric: 'warning',
+      ice: 'info',
+      fighting: 'danger',
+      poison: 'success',
+      ground: 'warning',
+      flying: 'info',
+      psychic: 'danger',
+      bug: 'success',
+      rock: 'secondary',
+      ghost: 'secondary',
+      dragon: 'primary',
+      dark: 'dark',
+      steel: 'secondary',
+      fairy: 'danger',
+      normal: 'secondary',
+    };
+    return cores[tipo] || 'secondary';
   }
 }

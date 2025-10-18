@@ -4,6 +4,7 @@ import { Cadastro } from './components/cadastro/cadastro';
 import { Pokedex } from './components/pokedex/pokedex';
 import { PokemonFavoritos } from './components/favoritos/favoritos';
 import { GrupoBatalha } from './components/grupo-batalha/grupo-batalha';
+import { AdminComponent } from './components/admin/admin';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -11,4 +12,5 @@ export const routes: Routes = [
   { path: 'pokedex', component: Pokedex },
   { path: 'favoritos', component: PokemonFavoritos },
   { path: 'grupo-batalha', component: GrupoBatalha },
+  { path: 'admin', component: AdminComponent },
 ];

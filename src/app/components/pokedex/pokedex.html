@@ -5,16 +5,18 @@
         <img src="pokeball.png" alt="Pokeball" class="pokeball-image" />
         <h1 class="fw-bold" style="font-size: 1.8rem">Pokédex Digital</h1>
         <p>
-          Explore o mundo dos Pokémon com nossa Pokédex interativa. Descubra Informações detalhadas
+          Explore o mundo dos Pokémon com nossa Pokédex interativa. Descubra informações detalhadas
           sobre cada monstrinho.
         </p>
       </div>
-      <button class="btn btn-primary" (click)="irParaFavoritos()">
-        <lucide-icon [img]="Sparkles" [size]="16" class="me-2"></lucide-icon> Favoritos
-      </button>
-      <button class="btn btn-primary" (click)="irParaGrupo()">
-        <lucide-icon [img]="Swords" [size]="16" class="me-2"></lucide-icon>Meu Grupo de batalha
-      </button>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" (click)="irParaFavoritos()">
+          <lucide-icon [img]="Sparkles" [size]="16" class="me-2"></lucide-icon> Favoritos
+        </button>
+        <button class="btn btn-primary" (click)="irParaGrupo()">
+          <lucide-icon [img]="Swords" [size]="16" class="me-2"></lucide-icon> Meu Grupo de Batalha
+        </button>
+      </div>
     </div>
   </div>
 
@@ -27,20 +29,23 @@
       <div><strong>9</strong> Gerações</div>
     </div>
 
-    <div class="mt-4 mb-4"><h4>Pokemons Descobertos</h4></div>
+    <div class="mt-4 mb-4"><h4>Pokémons Descobertos</h4></div>
 
-    <div
-      class="d-flex flex-wrap gap-2 mt-3"
-      style="border-bottom: 2px solid; padding-bottom: 12px; margin-bottom: 12px"
-    >
-      <button class="btn btn-sm text-white btn-primary" (click)="carregarPokemons()">
-        Todos os Tipos
-      </button>
-      <button class="btn btn-sm btn-outline-danger" (click)="buscarPorTipo('fire')">Fogo</button>
-      <button class="btn btn-sm btn-outline-primary" (click)="buscarPorTipo('water')">Água</button>
-      <button class="btn btn-sm btn-outline-success" (click)="buscarPorTipo('grass')">Grama</button>
-      <button class="btn btn-sm btn-outline-warning" (click)="buscarPorTipo('electric')">
-        Elétrico
+    <!-- Lista dinâmica de botões de tipo -->
+    <div class="d-flex flex-wrap gap-2 mt-3 mb-4">
+      <button class="btn btn-primary" (click)="limparFiltros()">Todos os Tipos</button>
+
+      <button
+        *ngFor="let tipo of tiposPokemon"
+        [ngClass]="
+          activeFilter === tipo
+            ? 'btn btn-sm text-white ' +
+              typeMapper.tipoClasses[typeMapper.traduzirParaPt(tipo).toLowerCase()]
+            : 'btn btn-sm btn-outline-' + obterCorBasica(tipo)
+        "
+        (click)="buscarPorTipo(tipo)"
+      >
+        {{ typeMapper.traduzirParaPt(tipo) }}
       </button>
     </div>
 
@@ -50,7 +55,7 @@
           type="text"
           class="form-control"
           placeholder="Buscar por nome..."
-          [(ngModel)]="searchTerm"
+          [(ngModel)]="search"
           (keyup.enter)="buscarPorNome()"
         />
       </div>
@@ -63,20 +68,36 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="text-center my-5">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2">Carregando pokémons...</p>
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="text-center"
+    style="
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    "
+  >
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-3 text-muted">Carregando pokémons...</p>
   </div>
 
-  <div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>
+  <!-- Erro -->
+  <div *ngIf="error && !loading" class="alert alert-danger text-center my-4">{{ error }}</div>
 
-  <div class="row mt-4">
+  <!-- Lista de Pokémon -->
+  <div *ngIf="!loading && !error" class="row mt-4">
     <div *ngFor="let p of pokemons" class="col-12 col-sm-6 col-lg-4 mb-4">
-      <app-pokemon-card [pokemon]="p" [showStats]="true"> </app-pokemon-card>
+      <app-pokemon-card [pokemon]="p" [showStats]="true"></app-pokemon-card>
     </div>
   </div>
 
-  <div class="d-flex justify-content-center align-items-center mt-3 gap-3">
+  <!-- Paginação -->
+  <div *ngIf="!loading" class="d-flex justify-content-center align-items-center mt-3 gap-3">
     <button
       class="btn btn-outline-primary"
       (click)="mudarPagina(-1)"
