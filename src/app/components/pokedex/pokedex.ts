@@ -29,7 +29,7 @@ export class Pokedex implements OnInit {
   readonly Sparkles = Sparkles;
   readonly Swords = Swords;
 
-  tiposPokemon: any = [
+  tiposPokemon: string[] = [
     'normal',
     'fire',
     'water',
